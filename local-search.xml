@@ -4,6 +4,44 @@
   
   
   <entry>
+    <title>《艾达的项圈》长评：读《艾达》有感，致以灰色的世界与理想的光辉</title>
+    <link href="/2023/04/20/%E3%80%8A%E8%89%BE%E8%BE%BE%E7%9A%84%E9%A1%B9%E5%9C%88%E3%80%8B%E9%95%BF%E8%AF%84%EF%BC%9A%E8%AF%BB%E3%80%8A%E8%89%BE%E8%BE%BE%E3%80%8B%E6%9C%89%E6%84%9F%EF%BC%8C%E8%87%B4%E4%BB%A5%E7%81%B0%E8%89%B2%E7%9A%84%E4%B8%96%E7%95%8C%E4%B8%8E%E7%90%86%E6%83%B3%E7%9A%84%E5%85%89%E8%BE%89/"/>
+    <url>/2023/04/20/%E3%80%8A%E8%89%BE%E8%BE%BE%E7%9A%84%E9%A1%B9%E5%9C%88%E3%80%8B%E9%95%BF%E8%AF%84%EF%BC%9A%E8%AF%BB%E3%80%8A%E8%89%BE%E8%BE%BE%E3%80%8B%E6%9C%89%E6%84%9F%EF%BC%8C%E8%87%B4%E4%BB%A5%E7%81%B0%E8%89%B2%E7%9A%84%E4%B8%96%E7%95%8C%E4%B8%8E%E7%90%86%E6%83%B3%E7%9A%84%E5%85%89%E8%BE%89/</url>
+    
+    <content type="html"><![CDATA[<p>作品请在菠萝包轻小说搜索</p><p><strong>轻微剧透。</strong></p><p>很早之前看《辛德勒的名单》，里面大概有这样一个情节，德国人命令犹太人修建房屋，负责此事的犹太人工程向德国军官指出建筑的结构设计不合理会倒塌，于是军官接受了修改的意见，然后下令枪毙了她。<br />我一度为这位军官的行为的矛盾和不可理喻感到困惑，但现在却又渐渐理解了。比做正确的事情更重要的，是维护不可侵犯的权威。<br />《艾达》的尺度比较大。我不知道作者到底有过什么样的经历，读了什么样的书，进行了怎样的思考，最终构建出了艾达，和她生活着的那个世界。艾达是不幸的，她异能者的身份使她遭到了不公正的对待，出生的罚款，学校的门槛，甚至被强制纠正性别。而艾达又是幸运的，她有着同甘共苦的家庭，有着善良正直的人的帮助。她在生活的历练中成长，在不断的斗争中争取自己的权利，在面对人心之恶时反而愈加正直，勇敢，善良。<br />本书的行文风格偏现实向，书中对具体的生活细节和家人之间互动的描写颇具真实感，其描写的现实也在很多地方可以引起我的共鸣。比如社会上的潜规则，人与人之间明里暗里的争斗。比如体制在光鲜亮丽外表下的龌龊，身份差距带来的歧视与不公，以及家人无条件的爱与支持。<br />这种风格也使得它的人物形象更加现实立体。每个人物与它们生活的现实相契合，是真真实实生活在那个世界上的人。当然，也只有重要的角色有这种级别的待遇，不太重要推进剧情的配角塑造还是模板化的，毕竟作者不是AI。<br />伴随着剧情的推进，《艾达》复杂的世界观也在渐渐展开。主角虽然只是从小学升初中，初中升高中，但是接触到的人与世界越来越广大。把异能者视为危险的奥斯汀政府，异能人主导的阿斯加德，对异能者意见不一诸多党派，研究异能的本质与应用的科学家，为异能者老兵争取权利的代表，应用异能者的能力对抗恶魔的将军。艾达在一次次的合作中成功地获得了多个派系的认同和欢迎，这是有一定的爽文性质的。<br />另外，本书作为的变嫁文，瑟瑟的水平也是极高的。作为一部充满真实感的小说，艾达的性别纠正过程并非一笔带过，而是进行了大量篇幅的细致描写。作者肯定仔细查阅读相关了资料，把术后佩戴模具塑性的过程写得像是亲身经历过一样，明明是很正常的事情却超级瑟欸。另外，男女之间的互动描写别具一格的，比如艾达为了保护自己带的“小雨伞”却意外被男友发现，我妈强塞给我的.jpg。对于小说来说，瑟瑟重要的不是过程，而是调情。</p><p>总之，《艾达》是一部深度融合了现实，瑟瑟，成长，友谊（和变质的友谊）的书，艾达小姐是人类的光！</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>小说 读后感</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>图像锐化</title>
+    <link href="/2023/04/11/%E5%9B%BE%E5%83%8F%E9%94%90%E5%8C%96/"/>
+    <url>/2023/04/11/%E5%9B%BE%E5%83%8F%E9%94%90%E5%8C%96/</url>
+    
+    <content type="html"><![CDATA[<h3 id="做法"><a class="markdownIt-Anchor" href="#做法"></a> 做法</h3><p>做法很简单，就是把源图像卷积一下，托Pytorch的福，Python代码只需要几行</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-comment"># 仅用于灰度图</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">sharpen</span>(<span class="hljs-params">image: torch.Tenser</span>) -&gt; torch.Tensor<br>    kernel = torch.tensor([<br>        [<span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>],<br>        [<span class="hljs-number">1.0</span>, -<span class="hljs-number">4.0</span>, <span class="hljs-number">1.0</span>],<br>        [<span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>],<br>        ]) <span class="hljs-comment"># 高斯滤波器</span><br><br>    filtered = torch.nn.functional.conv2d(image, kernel, padding=<span class="hljs-number">1</span>)<br><br>    <span class="hljs-keyword">return</span> (image - filtered).clip(<span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>)<br></code></pre></td></tr></table></figure><p>但是用C<ins>来做就很坐牢了，虽然可以使用Libtorch，但是C</ins>要装个外部库。。。淦</p><p>所以我想的是，要是能自己实现一个类似Libtorch这样的张量计算库，不求那么强大，能存储任意维度的张量，并且能做个2d卷积就可以了，感觉可能不是特别难。。。<br />然后，大失败。。。</p><p>总之，最后还是老老实实硬编码了一个3x3的卷积操作，代码非常难看就不贴出来了，不过图像锐化的效果还是挺不错的。</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>数字图像处理 需要改进</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Bmp图像读取和灰化</title>
     <link href="/2023/04/04/Bmp%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E5%92%8C%E7%81%B0%E5%8C%96/"/>
     <url>/2023/04/04/Bmp%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E5%92%8C%E7%81%B0%E5%8C%96/</url>
