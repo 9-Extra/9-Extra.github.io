@@ -1,0 +1,774 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="9_Extra">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本文实现对Bmp图像中24色彩位深的图像的读写，以及对读取出的图像进行灰化操作AAAAAA Bmp图像 Bmp是一种比较简单的图形格式，其开头是文件头BmpFileHeader，包括校验码，文件大小等信息，后面跟着信息头BmpInfoHeader，记录了图像的长宽，位深度等信息，之后就是真正的图像数据。 文件头和信息头的格式千言万语不如直接放代码，其中很多字段没有注释，因为它们其实并不重要（对于2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bmp图像读取和灰化">
+<meta property="og:url" content="https://9-extra.github.io/2023/04/04/Bmp%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E5%92%8C%E7%81%B0%E5%8C%96/index.html">
+<meta property="og:site_name" content="哎嘿">
+<meta property="og:description" content="本文实现对Bmp图像中24色彩位深的图像的读写，以及对读取出的图像进行灰化操作AAAAAA Bmp图像 Bmp是一种比较简单的图形格式，其开头是文件头BmpFileHeader，包括校验码，文件大小等信息，后面跟着信息头BmpInfoHeader，记录了图像的长宽，位深度等信息，之后就是真正的图像数据。 文件头和信息头的格式千言万语不如直接放代码，其中很多字段没有注释，因为它们其实并不重要（对于2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://9-extra.github.io/images/840174690.webp">
+<meta property="og:image" content="https://9-extra.github.io/2023/04/04/Bmp%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E5%92%8C%E7%81%B0%E5%8C%96/out.webp">
+<meta property="article:published_time" content="2023-04-04T07:43:02.000Z">
+<meta property="article:modified_time" content="2024-10-05T15:59:46.271Z">
+<meta property="article:author" content="9_Extra">
+<meta property="article:tag" content="数字图像处理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://9-extra.github.io/images/840174690.webp">
+  
+  
+  
+  <title>Bmp图像读取和灰化 - 哎嘿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"9-extra.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Main Page</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Bmp图像读取和灰化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-04 15:43" pubdate>
+          2023年4月4日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Bmp图像读取和灰化</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>本文实现对Bmp图像中24色彩位深的图像的读写，以及对读取出的图像进行灰化操作AAAAAA</p>
+<h3 id="bmp图像">Bmp图像</h3>
+<p>Bmp是一种比较简单的图形格式，其开头是文件头BmpFileHeader，包括校验码，文件大小等信息，后面跟着信息头BmpInfoHeader，记录了图像的长宽，位深度等信息，之后就是真正的图像数据。</p>
+<p>文件头和信息头的格式千言万语不如直接放代码，其中很多字段没有注释，因为它们其实并不重要（对于24色彩位深图像来说），关注那些有注释的就好。
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">define</span> COLOR_BIT_COUNT 24 <span class="hljs-comment">//只支持24位深度</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> HEADER_SIZE 54 <span class="hljs-comment">//BmpFileHeader和BmpInfoHeader加起来的标准大小，可以用static_assert检查一下</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(push) <span class="hljs-comment">//重要，调整结构体对齐策略，使其与标准的完全一致，不写的话编译器可能坏事</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(1)</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">BmpFileHeader</span> {<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">short</span> bf_type;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> bf_size;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> bf_reserved;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> bf_off_bits;<br><br>	<span class="hljs-built_in">BmpFileHeader</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> size) {<br>		<span class="hljs-keyword">this</span>-&gt;bf_type = <span class="hljs-number">0x4D42</span>; <span class="hljs-comment">//固定校验值'BM'</span><br>		<span class="hljs-keyword">this</span>-&gt;bf_size = size;<span class="hljs-comment">//整个文件（包含头和图像数据的总大小）</span><br>		<span class="hljs-keyword">this</span>-&gt;bf_reserved = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bf_off_bits = HEADER_SIZE;<span class="hljs-comment">//偏移量，这里假设BmpInfoHeader紧跟在BmpFileHeader后面，图像数据紧跟在BmpInfoHeader后面，一般的图像文件中都是这样的</span><br>	}<br>};<br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(pop)</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(push)</span><br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(1)</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">BmpInfoHeader</span> {<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> bi_size;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>    bi_width;<span class="hljs-comment">//宽，一行的像素数</span><br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>    bi_height;<span class="hljs-comment">//高，一列的像素数</span><br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">short</span>  bi_plants;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">short</span>  bi_bit_count;<span class="hljs-comment">//位深度，必须是24</span><br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>   bi_compression;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>   bi_sized_images;<br>	<span class="hljs-type">int</span>  bi_x_per_meter;<br>	<span class="hljs-type">int</span> bi_y_per_meter;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> bi_cir_used;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> bi_cir_important;<br><br>	<span class="hljs-built_in">BmpInfoHeader</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> width, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> height) {<br>		<span class="hljs-keyword">this</span>-&gt;bi_size = <span class="hljs-number">40</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bi_width = width;<br>		<span class="hljs-keyword">this</span>-&gt;bi_height = height;<br>		<span class="hljs-keyword">this</span>-&gt;bi_plants = <span class="hljs-number">1</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bi_bit_count = COLOR_BIT_COUNT;<span class="hljs-comment">//24色彩位深</span><br>		<span class="hljs-keyword">this</span>-&gt;bi_compression = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bi_sized_images = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bi_x_per_meter = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bi_y_per_meter = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bi_cir_used = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">this</span>-&gt;bi_cir_important = <span class="hljs-number">0</span>;<br>	}<br><br>};<br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(pop)</span><br></code></pre></td></tr></table></figure></p>
+<h3 id="读取文件信息头">读取文件信息头</h3>
+<p>知道了信息格式，简单地使用C库的fread就可以把文件头信息读出来了，检查格式的代码比读取的代码还要多
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">BmpFileHeader <span class="hljs-title">file_head</span><span class="hljs-params">(<span class="hljs-number">0</span>)</span></span>;<span class="hljs-comment">//随便初始化，反之会被后面读入的数据覆盖</span><br><span class="hljs-function">BmpInfoHeader <span class="hljs-title">info_head</span><span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span></span>;<br><br>FILE* fp;<br><span class="hljs-built_in">fopen_s</span>(&amp;fp, name.<span class="hljs-built_in">c_str</span>(), <span class="hljs-string">"rb"</span>);<span class="hljs-comment">//打开文件，name是文件路径</span><br><span class="hljs-keyword">if</span> (fp == <span class="hljs-literal">nullptr</span>) {<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Fail to open file!\n"</span>);<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>}<br><br><span class="hljs-built_in">fread</span>(&amp;file_head, <span class="hljs-built_in">sizeof</span>(BmpFileHeader), <span class="hljs-number">1</span>, fp);<span class="hljs-comment">//读取BmpFileHeader</span><br><br><span class="hljs-keyword">if</span> (file_head.bf_type != <span class="hljs-number">0x4D42</span>){<span class="hljs-comment">//检查校验值</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"文件格式错误！\n"</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>}<br><br><span class="hljs-built_in">fread</span>(&amp;info_head, <span class="hljs-built_in">sizeof</span>(BmpInfoHeader), <span class="hljs-number">1</span>, fp);<span class="hljs-comment">//读取BmpInfoHeader</span><br><br><span class="hljs-keyword">if</span> (info_head.bi_bit_count != COLOR_BIT_COUNT){<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"仅支持24位深图像!\n"</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>}<br></code></pre></td></tr></table></figure> ### 读取图像像素
+图像的真正的像素信息<strong>一般来说紧跟</strong>在头信息后面，也就是说只要继续fread就可以把图像读出来了。但是为了解析每一个像素的颜色信息，我们需要进一步了解bmp存储像素颜色的方式。
+在bmp文件中，24位深图像使用24位（3个字节）存储一个像素，其中每8位（1个字节）储存其中一个颜色分量，由暗到亮取值范围为0-255。颜色分量的存储顺序为<strong>BGR</strong>，即第一个8位代表该像素中蓝色的亮度，第二个8位代表绿色的亮度，第三个8位代表红色的亮度。（虽然在图像灰化这个任务中颜色分量的存储顺序并不重要，但是还是讲清楚吧）
+举例如下： &gt;白色 0xffffff &gt;黑色 0x000000 &gt;纯红色 0x0000ff</p>
+<p>讲完了一个像素，再说bmp如何存储一堆像素，嗯，对于图像的每一行来说，就是简简单单地把该行所有的像素的数据从左道右一个紧挨一个地排在一起，就是这样。头24bit是第一个像素数据，接下来的24bit就是第二个。。。。。
+但是在存储列的时候情况稍微复杂了一点点，首先，列存储的顺序是<strong>自下而上</strong>的，也就是说，我们从bmp文件中读取到的第一行的数据是实际图像中最下方一行像素的（这对图像灰化也不重要，代码里也没有体现）。第二，bmp要求每一行的数据以<strong>4字节对齐</strong>，也就是说如果一行像素所占据的字节数不到4的整数倍，那就用0在末尾补全不足的位数。
+&gt;举个例子，如果一幅图像每行有5个像素，共占据<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="10.308ex" height="1.692ex" role="img" focusable="false" viewBox="0 -666 4556 748"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="35" d="M164 157Q164 133 148 117T109 101H102Q148 22 224 22Q294 22 326 82Q345 115 345 210Q345 313 318 349Q292 382 260 382H254Q176 382 136 314Q132 307 129 306T114 304Q97 304 95 310Q93 314 93 485V614Q93 664 98 664Q100 666 102 666Q103 666 123 658T178 642T253 634Q324 634 389 662Q397 666 402 666Q410 666 410 648V635Q328 538 205 538Q174 538 149 544L139 546V374Q158 388 169 396T205 412T256 420Q337 420 393 355T449 201Q449 109 385 44T229 -22Q148 -22 99 32T50 154Q50 178 61 192T84 210T107 214Q132 214 148 197T164 157Z"></path></g><g data-mml-node="mo" transform="translate(722.2,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(1722.4,0)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g><g data-mml-node="mo" transform="translate(2500.2,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(3556,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="35" d="M164 157Q164 133 148 117T109 101H102Q148 22 224 22Q294 22 326 82Q345 115 345 210Q345 313 318 349Q292 382 260 382H254Q176 382 136 314Q132 307 129 306T114 304Q97 304 95 310Q93 314 93 485V614Q93 664 98 664Q100 666 102 666Q103 666 123 658T178 642T253 634Q324 634 389 662Q397 666 402 666Q410 666 410 648V635Q328 538 205 538Q174 538 149 544L139 546V374Q158 388 169 396T205 412T256 420Q337 420 393 355T449 201Q449 109 385 44T229 -22Q148 -22 99 32T50 154Q50 178 61 192T84 210T107 214Q132 214 148 197T164 157Z" transform="translate(500,0)"></path></g></g></g></svg></mjx-container></span>位，于是在存储进bmp文件时需要在该行的末尾再补一个1个字节（填0）达到4的倍数16字节，再开始下一行的存储。（读取时则需要跳过这些填补的字节）</p>
+<p>综上，我们先通过图像的宽度计算出每行末尾需要填补（跳过）多少个字节
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//unsigned int width; 图像宽度 </span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> tail_size = ((width * <span class="hljs-number">3</span> + <span class="hljs-number">3</span>) / <span class="hljs-number">4</span>) * <span class="hljs-number">4</span> - width * <span class="hljs-number">3</span>;<span class="hljs-comment">//天花板除</span><br></code></pre></td></tr></table></figure></p>
+<p>由此，我们已经可以写出准确读取图像中每一个像素的代码了 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = i; i &lt; (<span class="hljs-type">int</span>)height; i--) {<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; (<span class="hljs-type">int</span>)width; j++) {<br>		<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> color[<span class="hljs-number">3</span>];<br>		<span class="hljs-built_in">fread</span>((<span class="hljs-type">void</span>*)color, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">char</span>), <span class="hljs-number">3</span>, fp);<br><br>        <span class="hljs-comment">//color[0] : 蓝色分量</span><br>        <span class="hljs-comment">//color[1] : 绿色分量</span><br>        <span class="hljs-comment">//color[2] : 红色分量</span><br>        <span class="hljs-built_in">what_ever_we_want_to_do</span>(color);<br>	}<br><br>	<span class="hljs-built_in">fseek</span>(fp, tail_size, SEEK_CUR);<span class="hljs-comment">//skip padding</span><br>}<br><br><span class="hljs-built_in">close</span>(fp);<span class="hljs-comment">//文件就应该读完了</span><br></code></pre></td></tr></table></figure>
+### 图像的灰化操作
+首先我们需要明确这样一个事实：我们转化出了“灰色图像”，实际上也是要用24位深的bmp格式存储的。也就是说，每个像素还是有着蓝绿红三个颜色通道，但是呈现的结果却是灰色（白色，黑色）。
+一个灰色的像素，实际上只存储了一个颜色信息，其实就是说，它的rgb三个分量是始终相同的，全为0就是黑色，全为255就是白色，取在0-255中间就是灰色。
+把一个彩色的像素转化为灰色，在bgr颜色空间下是就极其简单的<strong>取平均值</strong>。
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> gray = (color[<span class="hljs-number">0</span>] + color[<span class="hljs-number">1</span>] + color[<span class="hljs-number">2</span>]) / <span class="hljs-number">3</span>;<br></code></pre></td></tr></table></figure>
+<strong>然而上面的代码其实是错误的</strong>。逻辑正确，但是踩了一个c++的坑，直接使用unsigned
+char类型相加会导致溢出，所以，需要先转化到更大的类型上再进行加法。</p>
+<p><strong>9EX特色的灰度转化方法</strong> <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//虽然unsigned short就可以，但unsigned int用习惯了</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> gray = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(((<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)color[<span class="hljs-number">0</span>] + (<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)color[<span class="hljs-number">1</span>] + (<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)color[<span class="hljs-number">2</span>]) / <span class="hljs-number">3</span>);<br></code></pre></td></tr></table></figure>
+至于这个除法除不尽怎么办，嗯，这个小细节真的不重要，取近似，四舍五入，向上向下取整都不会有太大区别。</p>
+<p>最后，我们把颜色的三个分量都用计算出来的灰度值替换，再写回另一个文件里就可以了。
+为了代码清楚明了，我们将读图像和写图像的流程分开。即，先把图像读到一个vector中保存，进行处理，再把它写入目标文件，而不是把读，处理和写放在同一个循环中（这样其实节省内存，但可拓展性和稳健性不好）。</p>
+<p>于是我们在读图像时直接将图像数据读进vector里存起来 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//定义一个Pixel结构代表一个像素数据</span><br><span class="hljs-keyword">union</span> <span class="hljs-title class_">Pixel</span>{ <span class="hljs-comment">//联合体</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-keyword">struct</span>{<br>        <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> b, g, r;<br>    };<span class="hljs-comment">//匿名struct</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> v[<span class="hljs-number">3</span>];<br><br>    <span class="hljs-built_in">Pixel</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> b,<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> g,<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> r)<br>    :<span class="hljs-built_in">b</span>(b),<span class="hljs-built_in">g</span>(g),<span class="hljs-built_in">r</span>(r)<br>    {}<br>}<br><br><span class="hljs-function">std::vector&lt;Pixel&gt; <span class="hljs-title">framebuffer</span><span class="hljs-params">(width * height)</span></span>;<span class="hljs-comment">//存储需要的空间可以直接计算出来哦</span><br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = i; i &lt; (<span class="hljs-type">int</span>)height; i--) {<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; (<span class="hljs-type">int</span>)width; j++) {<br>		<span class="hljs-built_in">fread</span>((<span class="hljs-type">void</span>*)&amp;framebuffer[i * height + j], <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">char</span>), <span class="hljs-number">3</span>, fp);<span class="hljs-comment">//i * height + j：计算j行i列像素存储在framebuffer中的下标</span><br>	}<br>	<span class="hljs-built_in">fseek</span>(fp, tail_size, SEEK_CUR);<span class="hljs-comment">//文件指针后移，skip padding</span><br>}<br><br><span class="hljs-built_in">close</span>(fp);<span class="hljs-comment">//文件就应该读完了</span><br></code></pre></td></tr></table></figure></p>
+<p>接着，进行灰化处理 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span>(Pixel&amp; p : framebuffer){<span class="hljs-comment">//注意这里的取引用符号&amp;不要漏了</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> gray = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(((<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)p.r + (<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)p.g + (<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)p.b) / <span class="hljs-number">3</span>);<br>    p = {gray, gray, gray};<span class="hljs-comment">//这样赋值 </span><br>}<br></code></pre></td></tr></table></figure></p>
+<p>最后，写入bmp文件，和读图像的流程一摸一样 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> bitmap_size = (width * <span class="hljs-number">3</span> + tail_size) * height;<span class="hljs-comment">//图像数据占据的字节数</span><br>BmpFileHeader file_head = <span class="hljs-built_in">BmpFileHeader</span>(bitmap_size + HEADER_SIZE);<span class="hljs-comment">//bitmap_size + HEADER_SIZE是整个文件的大小</span><br>BmpInfoHeader info_head = <span class="hljs-built_in">BmpInfoHeader</span>(width, height);<br><br>FILE* fp;<br><span class="hljs-built_in">fopen_s</span>(&amp;fp, name.<span class="hljs-built_in">c_str</span>(), <span class="hljs-string">"wb"</span>);<span class="hljs-comment">//name是要写入的文件路径</span><br><span class="hljs-keyword">if</span> (fp == <span class="hljs-literal">nullptr</span>) {<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Fail to write file!\n"</span>);	<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>}<br><br><span class="hljs-built_in">fwrite</span>((<span class="hljs-type">void</span>*)&amp;file_head, <span class="hljs-built_in">sizeof</span>(file_head), <span class="hljs-number">1</span>, fp);<span class="hljs-comment">//写入BmpFileHeader</span><br><span class="hljs-built_in">fwrite</span>((<span class="hljs-type">void</span>*)&amp;info_head, <span class="hljs-built_in">sizeof</span>(info_head), <span class="hljs-number">1</span>, fp);<span class="hljs-comment">//写入BmpInfoHeader</span><br><br><span class="hljs-comment">//写入图像数据</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = i; i &lt; (<span class="hljs-type">int</span>)height; i--) {<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; (<span class="hljs-type">int</span>)width; j++) {<br>		<span class="hljs-built_in">fwrite</span>((<span class="hljs-type">void</span>*)framebuffer[i * height + j], <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">char</span>), <span class="hljs-number">3</span>, fp);<br>	}<br>    <span class="hljs-built_in">fwrite</span>((<span class="hljs-type">void</span>*)<span class="hljs-string">"\0\0\0"</span>, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">char</span>), tail_size, fp);<span class="hljs-comment">//填充0</span><br>}<br><br><span class="hljs-built_in">fclose</span>(fp);<br></code></pre></td></tr></table></figure></p>
+<h3 id="效果">效果</h3>
+<p><img src="/images/840174690.webp" srcset="/img/loading.gif" lazyload alt="灰化前"> <img src="out.webp" srcset="/img/loading.gif" lazyload alt="灰化后"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" class="print-no-link">#数字图像处理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Bmp图像读取和灰化</div>
+      <div>https://9-extra.github.io/2023/04/04/Bmp图像读取和灰化/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>9_Extra</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/11/%E5%9B%BE%E5%83%8F%E9%94%90%E5%8C%96/" title="图像锐化">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">图像锐化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/03/%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/" title="自上而下语法分析">
+                        <span class="hidden-mobile">自上而下语法分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
