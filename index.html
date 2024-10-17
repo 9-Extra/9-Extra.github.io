@@ -74,119 +74,7 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
-  direction: ltr;
-}
-
-mjx-container[jax="SVG"] > svg {
-  overflow: visible;
-}
-
-mjx-container[jax="SVG"][display="true"] {
-  display: block;
-  text-align: center;
-  margin: 1em 0;
-}
-
-mjx-container[jax="SVG"][justify="left"] {
-  text-align: left;
-}
-
-mjx-container[jax="SVG"][justify="right"] {
-  text-align: right;
-}
-
-g[data-mml-node="merror"] > g {
-  fill: red;
-  stroke: red;
-}
-
-g[data-mml-node="merror"] > rect[data-background] {
-  fill: yellow;
-  stroke: none;
-}
-
-g[data-mml-node="mtable"] > line[data-line] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > rect[data-frame] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > .mjx-dashed {
-  stroke-dasharray: 140;
-}
-
-g[data-mml-node="mtable"] > .mjx-dotted {
-  stroke-linecap: round;
-  stroke-dasharray: 0,140;
-}
-
-g[data-mml-node="mtable"] > svg {
-  overflow: visible;
-}
-
-[jax="SVG"] mjx-tool {
-  display: inline-block;
-  position: relative;
-  width: 0;
-  height: 0;
-}
-
-[jax="SVG"] mjx-tool > mjx-tip {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-mjx-tool > mjx-tip {
-  display: inline-block;
-  padding: .2em;
-  border: 1px solid #888;
-  font-size: 70%;
-  background-color: #F8F8F8;
-  color: black;
-  box-shadow: 2px 2px 5px #AAAAAA;
-}
-
-g[data-mml-node="maction"][data-toggle] {
-  cursor: pointer;
-}
-
-mjx-status {
-  display: block;
-  position: fixed;
-  left: 1em;
-  bottom: 1em;
-  min-width: 25%;
-  padding: .2em .4em;
-  border: 1px solid #888;
-  font-size: 90%;
-  background-color: #F8F8F8;
-  color: black;
-}
-
-foreignObject[data-mjx-xml] {
-  font-family: initial;
-  line-height: normal;
-  overflow: visible;
-}
-
-.MathJax path {
-  stroke-width: 3;
-}
-
-mjx-container[display="true"] {
-  overflow: auto hidden;
-}
-
-mjx-container[display="true"] + br {
-  display: none;
-}
-</style></head>
+<!-- hexo injector head_end start --><link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -339,6 +227,46 @@ mjx-container[display="true"] + br {
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/10/06/%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8/" target="_self">
+          变分自编码器（VAE）实现及其数学原理探究
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/10/06/%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8/" target="_self">
+        <div>
+          导言 要动手实现一个VAE不算太难，但是为了把它的数学原理搞清楚真的花了我不少时间，概率论没学好导致的。这里按照先讲代码实现，再深究数学原理的顺序来介绍VAE。希望能让像我一样的数学苦手可以比较容易地搞懂这玩意儿。（话说搞出VAE的那伙人是先通过数学方法证明模型成立再在计算机上实现，还是先做出来之后发现它work再进一步研究出数学原理的呢）。 现在主流的生成模型有：生成对抗网络（GAN），扩散模型
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-10-06 21:17" pubdate>
+              2024-10-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/">#深度学习 图像生成</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2023/05/05/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/" target="_self">
           注意力机制
         </a>
@@ -347,7 +275,7 @@ mjx-container[display="true"] + br {
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/05/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/" target="_self">
         <div>
-          看完李沫讲解的Transformer，写一些笔记。只要是看了注意力机制而不是Transformer本身。 注意力层 输入一个（多个）请求query和许多对key和value（都是一维向量），使用某种相似度计算函数，查询出与query最相似的key对应的value的值。不同的相似度计算方法衍生出不同的注意力机制。     # Scaled Dot-Product Attention 最简单的注意力机
+          看完李沫讲解的Transformer，写一些笔记。只看了注意力机制而不是Transformer本身。 注意力层 输入一个（多个）请求query和许多对key和value（都是一维向量），使用某种相似度计算函数，查询出与query最相似的key对应的value的值。不同的相似度计算方法衍生出不同的注意力机制。     # Scaled Dot-Product Attention 最简单的注意力机制，
         </div>
       </a>
 
@@ -503,52 +431,6 @@ mjx-container[display="true"] + br {
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2023/04/03/%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/" target="_self">
-          <img src="/images/%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E5%B0%81%E9%9D%A2.webp" srcset="/img/loading.gif" lazyload alt="自上而下语法分析">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/04/03/%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/" target="_self">
-          自上而下语法分析
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2023/04/03/%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/" target="_self">
-        <div>
-          递归下降分析法 当文法没有公共左因子，没有左递归时，让每个非终结符对应一个过程（函数），该过程对相应的非终结符产生式的右部短语进行语法分析，这种方法称为递归下降分析法。这样的分析程序称为递归下降分析器。实际上相当于有限自动机的实现模型。 注意先消除公共左因子和左递归 由于消除了公共左因子，所以在语法分析时不存在回退，一旦开始匹配某个符号，中途出现不匹配时就不用回退，直接报错。 对于语法
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-03 18:00" pubdate>
-              2023-04-03
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">#编译原理</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2023/03/21/%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%9D%87%E8%A1%A1%E5%8C%96/" target="_self">
           <img src="/images/840174690.webp" srcset="/img/loading.gif" lazyload alt="直方图均衡化">
         </a>
@@ -565,7 +447,7 @@ mjx-container[display="true"] + br {
       
       <a class="index-excerpt " href="/2023/03/21/%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%9D%87%E8%A1%A1%E5%8C%96/" target="_self">
         <div>
-          直方图处理 一副数字影像的直方图是一个离散函数，其中是第个灰阶而是影像中带有灰阶的像素个数。一个正规化的直方图中，其中为总的像素个数，也就是说代表灰阶出现的概率，加起来等于1。 如果直方图的分布不均匀，高峰处集中在低区域说明图像整体较暗，集中在高区域说明图像整体亮，如果集中在中间较窄的区域，则图像的对比度较低。 可以使用直方图的相似性来比较图像是否相似。 直方图均衡化 将一个直方图不均匀的图像的直
+          直方图处理 一副数字影像的直方图是一个离散函数h(rk)=nkh(r_k)=n_kh(rk​)=nk​，其中rkr_krk​是第kkk个灰阶而nkn_knk​是影像中带有灰阶rkr_krk​的像素个数。一个正规化的直方图中p(rk)=nk/np(r_k)=n_k/np(rk​)=nk​/n，其中nnn为总的像素个数，也就是说p(rk)p(r_k)p(rk​)代表灰阶rkr_krk​出现的概率，加起
         </div>
       </a>
 
@@ -605,7 +487,7 @@ mjx-container[display="true"] + br {
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/03/16/%E4%BB%A3%E7%A0%81%E5%9D%97%E6%B5%8B%E8%AF%95/" target="_self">
         <div>
-          放置代码块 不声明语言 1234567891011121314151617181920212223242526#include "FontEngine.h"FontEngine::FontEngine() {	if (FT_Init_FreeType(&amp;library)) {		SysError(L"Failed to init freetype library");	}	if (FT_N
+          公式 一个a可以产生a开头的句子a→ap∣ra \to ap | ra→ap∣r 结果就是a⇒rppppppppppppa \Rightarrow rppppppppppppa⇒rpppppppppppp，不方便解析 单行公式 一个四元式G=(Vt,Vn,S,P)G=(V_t,V_n,S,P)G=(Vt​,Vn​,S,P) VtV_tVt​:非终结符集合 VnV_nVn​:终结符集合 SSS:开始
         </div>
       </a>
 
@@ -620,38 +502,12 @@ mjx-container[display="true"] + br {
         
         
         
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/03/15/%E8%BF%99%E4%B8%8D%E8%B5%B6%E7%B4%A7%E8%AF%95%E8%AF%95/" target="_self">
-          这不赶紧试试
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/15/%E8%BF%99%E4%B8%8D%E8%B5%B6%E7%B4%A7%E8%AF%95%E8%AF%95/" target="_self">
-        <div>
-          语言定义  左递归： 一个a可以产生a开头的句子 结果就是，不方便解析  语义 合法句子的含义，不好形式化描述 文法 一个四元式 :非终结符集合 :终结符集合 :开始符号 :产生式的非空有限集  句型：S推导的中间结果，可能没有完全推导 句子：S推导的结果，其中都是终结符 语言：S推导的所有句子的集合  四种文法(Chomsky体系) 四种文法归类是包含关系，越来越简单容易解析  0型文法（短语结
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-15 17:23" pubdate>
-              2023-03-15
-            </time>
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%B5%8B%E8%AF%95%E7%94%A8/">#测试用</a>
+            
           </div>
-        
-        
         
       </div>
     </article>
